@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Apply for {{ job.title }} - Job Portal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Apply for {{ job.title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Job Details</h5>
+                    <p><strong>Company:</strong> {{ job.company.name }}</p>
+                    <p><strong>Location:</strong> {{ job.location }}</p>
+                    <p><strong>Job Type:</strong> {{ job.get_job_type_display }}</p>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.cover_letter.id_for_label }}" class="form-label">Cover Letter</label>
+                        {{ form.cover_letter }}
+                        {% if form.cover_letter.errors %}
+                            <div class="text-danger">{{ form.cover_letter.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.resume.id_for_label }}" class="form-label">Resume</label>
+                        {{ form.resume }}
+                        {% if user.profile.resume %}
+                            <p class="mt-2">You already have a resume in your profile. If you don't upload a new one, we'll use that.</p>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                    <a href="{% url 'job_detail' job.pk %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

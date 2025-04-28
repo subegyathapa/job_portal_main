@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ job.title }} - Job Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">{{ job.title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4">
+                    {% if job.company.logo %}
+                        <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }} Logo" class="me-3" style="width: 70px; height: 70px; object-fit: contain;">
+                    {% else %}
+                        <img src="https://via.placeholder.com/70" alt="Company Logo" class="me-3">
+                    {% endif %}
+                    <div>
+                        <h5 class="mb-0">{{ job.company.name }}</h5>
+                        <p class="mb-0">{{ job.location }}</p>
+                        {% if job.company.website %}
+                            <a href="{{ job.company.website }}" target="_blank">Visit Website</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <span class="badge bg-info me-2">{{ job.get_job_type_display }}</span>
+                    {% if job.category %}
+                        <span class="badge bg-secondary me-2">{{ job.category.name }}</span>
+                    {% endif %}
+                    <span class="badge bg-primary">Posted: {{ job.created_at|date:"M d, Y" }}</span>
+                </div>
+
+                <div class="mb-4">
+                    <h5>Job Description</h5>
+                    <p>{{ job.description|linebreaks }}</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5>Requirements</h5>
+                    <p>{{ job.requirements|linebreaks }}</p>
+                </div>
+
+                {% if job.salary_min or job.salary_max %}
+                    <div class="mb-4">
+                        <h5>Salary</h5>
+                        <p>
+                            {% if job.salary_min and job.salary_max %}
+                                ${{ job.salary_min }} - ${{ job.salary_max }}
+                            {% elif job.salary_min %}
+                                From ${{ job.salary_min }}
+                            {% elif job.salary_max %}
+                                Up to ${{ job.salary_max }}
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endif %}
+
+                <div class="mb-4">
+                    <h5>Application Deadline</h5>
+                    <p>{{ job.deadline|date:"F d, Y" }}</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                {% if user.is_authenticated %}
+                    {% if user.profile.is_employer %}
+                        {% if job.posted_by == user %}
+                            <div class="d-flex">
+                                <a href="{% url 'job_update' job.pk %}" class="btn btn-primary me-2">Edit Job</a>
+                                <a href="{% url 'job_delete' job.pk %}" class="btn btn-danger me-2">Delete Job</a>
+                                <a href="{% url 'manage_applications' job.pk %}" class="btn btn-info">Manage Applications</a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        {% if already_applied %}
+                            <button class="btn btn-success" disabled>Already Applied</button>
+                        {% else %}
+                            <a href="{% url 'apply_for_job' job.pk %}" class="btn btn-primary">Apply Now</a>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary">Login to Apply</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Job Summary</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Job Type</span>
+                        <span>{{ job.get_job_type_display }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Location</span>
+                        <span>{{ job.location }}</span>
+                    </li>
+                    {% if job.category %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Category</span>
+                            <span>{{ job.category.name }}</span>
+                        </li>
+                    {% endif %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Posted On</span>
+                        <span>{{ job.created_at|date:"M d, Y" }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Deadline</span>
+                        <span>{{ job.deadline|date:"M d, Y" }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Company Info</h3>
+            </div>
+            <div class="card-body">
+                <h5>{{ job.company.name }}</h5>
+                <p>{{ job.company.description|truncatewords:30 }}</p>
+                {% if job.company.website %}
+                    <p><strong>Website:</strong> <a href="{{ job.company.website }}" target="_blank">{{ job.company.website }}</a></p>
+                {% endif %}
+                <p><strong>Location:</strong> {{ job.company.location }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

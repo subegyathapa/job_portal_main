@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ company.name }} - Job Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">{{ company.name }}</h3>
+            </div>
+            <div class="card-body text-center">
+                {% if company.logo %}
+                    <img src="{{ company.logo.url }}" alt="{{ company.name }} Logo" class="company-logo mb-3">
+                {% else %}
+                    <img src="https://via.placeholder.com/100" alt="Company Logo" class="company-logo mb-3">
+                {% endif %}
+                <p><strong>Location:</strong> {{ company.location }}</p>
+                {% if company.established_date %}
+                    <p><strong>Established:</strong> {{ company.established_date|date:"F Y" }}</p>
+                {% endif %}
+                {% if company.website %}
+                    <p><strong>Website:</strong> <a href="{{ company.website }}" target="_blank">{{ company.website }}</a></p>
+                {% endif %}
+                <div class="mt-3">
+                    <a href="{% url 'company_update' company.pk %}" class="btn btn-primary">Edit Company</a>
+                    <a href="{% url 'company_delete' company.pk %}" class="btn btn-danger">Delete Company</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">About</h3>
+            </div>
+            <div class="card-body">
+                <p>{{ company.description }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Jobs ({{ jobs.count }})</h3>
+                <a href="{% url 'job_create' %}" class="btn btn-light">Post New Job</a>
+            </div>
+            <div class="card-body">
+                {% if jobs %}
+                    <div class="list-group">
+                        {% for job in jobs %}
+                            <a href="{% url 'job_detail' job.pk %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ job.title }}</h5>
+                                    <small>Posted: {{ job.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <p class="mb-1">{{ job.location }} - {{ job.get_job_type_display }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small>{{ job.applications.count }} application(s)</small>
+                                    <div>
+                                        <a href="{% url 'manage_applications' job.pk %}" class="btn btn-sm btn-outline-primary">Manage Applications</a>
+                                        <a href="{% url 'job_update' job.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No jobs posted for this company yet.</p>
+                    <a href="{% url 'job_create' %}" class="btn btn-primary">Post a Job</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

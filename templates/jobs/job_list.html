@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Jobs - Job Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Search Jobs</h3>
+            </div>
+            <div class="card-body">
+                <form method="GET" action="{% url 'job_list' %}">
+                    <div class="mb-3">
+                        <label for="{{ form.keyword.id_for_label }}" class="form-label">Keyword</label>
+                        {{ form.keyword }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.location.id_for_label }}" class="form-label">Location</label>
+                        {{ form.location }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.category.id_for_label }}" class="form-label">Category</label>
+                        {{ form.category }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.job_type.id_for_label }}" class="form-label">Job Type</label>
+                        {{ form.job_type }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Categories</h3>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{% url 'job_list' %}" class="list-group-item list-group-item-action {% if not request.GET.category %}active{% endif %}">
+                        All Categories
+                    </a>
+                    {% for category in categories %}
+                        <a href="{% url 'job_list' %}?category={{ category.id }}" class="list-group-item list-group-item-action {% if request.GET.category == category.id|stringformat:'i' %}active{% endif %}">
+                            {{ category.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Available Jobs ({{ jobs.count }})</h2>
+            {% if user.is_authenticated and user.profile.is_employer %}
+                <a href="{% url 'job_create' %}" class="btn btn-primary">Post a Job</a>
+            {% endif %}
+        </div>
+
+        {% if jobs %}
+            <div class="row">
+                {% for job in jobs %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card job-card h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">{{ job.title }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    {% if job.company.logo %}
+                                        <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }} Logo" class="me-3" style="width: 50px; height: 50px; object-fit: contain;">
+                                    {% else %}
+                                        <img src="https://via.placeholder.com/50" alt="Company Logo" class="me-3">
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0">{{ job.company.name }}</h6>
+                                        <small>{{ job.location }}</small>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="badge bg-info">{{ job.get_job_type_display }}</span>
+                                    {% if job.category %}
+                                        <span class="badge bg-secondary">{{ job.category.name }}</span>
+                                    {% endif %}
+                                </div>
+                                <p class="mb-2">{{ job.description|truncatewords:20 }}</p>
+                                {% if job.salary_min or job.salary_max %}
+                                    <p><strong>Salary:</strong>
+                                        {% if job.salary_min and job.salary_max %}
+                                            ${{ job.salary_min }} - ${{ job.salary_max }}
+                                        {% elif job.salary_min %}
+                                            From ${{ job.salary_min }}
+                                        {% elif job.salary_max %}
+                                            Up to ${{ job.salary_max }}
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
+                                <p><strong>Posted:</strong> {{ job.created_at|date:"M d, Y" }}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'job_detail' job.pk %}" class="btn btn-primary w-100">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <p>No jobs found matching your criteria.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
