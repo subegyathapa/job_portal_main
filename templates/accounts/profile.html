@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - Job Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">{{ user.username }}</h3>
+            </div>
+            <div class="card-body text-center">
+                {% if user.profile.profile_picture %}
+                    <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile-pic mb-3">
+                {% else %}
+                    <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-pic mb-3">
+                {% endif %}
+                <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                <p>{{ user.email }}</p>
+                <p>Account Type: {% if user.profile.is_employer %}Employer{% else %}Job Seeker{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Edit Profile</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+                        {{ form.phone_number }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.address.id_for_label }}" class="form-label">Address</label>
+                        {{ form.address }}
+                    </div>
+                    {% if not user.profile.is_employer %}
+                    <div class="mb-3">
+                        <label for="{{ form.skills.id_for_label }}" class="form-label">Skills</label>
+                        {{ form.skills }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.resume.id_for_label }}" class="form-label">Resume</label>
+                        {{ form.resume }}
+                        {% if user.profile.resume %}
+                            <p class="mt-2">Current: <a href="{{ user.profile.resume.url }}" target="_blank">{{ user.profile.resume.name }}</a></p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Profile Picture</label>
+                        {{ form.profile_picture }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

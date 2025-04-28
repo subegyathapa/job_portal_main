@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Seeker Dashboard - Job Portal{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Job Seeker Dashboard</h2>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">My Applications</h3>
+    </div>
+    <div class="card-body">
+        {% if applications %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Applied On</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in applications %}
+                            <tr>
+                                <td>{{ application.job.title }}</td>
+                                <td>{{ application.job.company.name }}</td>
+                                <td>{{ application.applied_at|date:"M d, Y" }}</td>
+                                <td>
+                                    {% if application.status == 'pending' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% elif application.status == 'reviewed' %}
+                                        <span class="badge bg-info">Reviewed</span>
+                                    {% elif application.status == 'shortlisted' %}
+                                        <span class="badge bg-primary">Shortlisted</span>
+                                    {% elif application.status == 'rejected' %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                    {% elif application.status == 'hired' %}
+                                        <span class="badge bg-success">Hired</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'job_detail' application.job.pk %}" class="btn btn-sm btn-outline-primary">View Job</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>You haven't applied for any jobs yet.</p>
+            <a href="{% url 'job_list' %}" class="btn btn-primary">Browse Jobs</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}>
