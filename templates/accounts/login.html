@@ -1,4 +1,4 @@
- {% extends 'base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Login - Job Portal{% endblock %}
 
@@ -10,6 +10,16 @@
                 <h3 class="mb-0">Login</h3>
             </div>
             <div class="card-body">
+
+                {# Display non-field errors like "Please enter a correct username and password." #}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <form method="POST">
                     {% csrf_token %}
                     <div class="mb-3">
@@ -33,6 +43,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
+
                 <div class="mt-3">
                     <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
                     <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
@@ -48,12 +59,9 @@
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#{{ form.password.id_for_label }}');
 
-        togglePassword.addEventListener('click', function (e) {
-            // Toggle the type attribute
+        togglePassword.addEventListener('click', function () {
             const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
             password.setAttribute('type', type);
-
-            // Toggle the eye / eye slash icon
             this.querySelector('i').classList.toggle('fa-eye');
             this.querySelector('i').classList.toggle('fa-eye-slash');
         });
