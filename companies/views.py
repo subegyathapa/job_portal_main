@@ -9,7 +9,10 @@ from .forms import CompanyForm
 @login_required
 def company_list(request):
     companies = Company.objects.filter(owner=request.user)
-    return render(request, 'companies/company_list.html', {'companies': companies})
+    return render(request, 'companies/company_list.html', {
+        'companies': companies,
+        'show_hero': True  # This enables the hero section
+    })
 
 
 @login_required

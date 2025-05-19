@@ -37,7 +37,10 @@ def job_list(request):
     return render(request, 'jobs/job_list.html', {
         'jobs': jobs,
         'form': form,
-        'categories': categories
+        'categories': categories,
+        'show_hero': True
+
+
     })
 
 

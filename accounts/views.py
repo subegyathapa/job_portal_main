@@ -50,8 +50,10 @@ def dashboard(request):
     else:
         # For job seekers, show their applications
         applications = Application.objects.filter(applicant=user)
-        return render(request, 'accounts/jobseeker_dashboard.html', {'applications': applications})
-
+        context = {
+            'applications': applications
+        }
+        return render(request, 'accounts/jobseeker_dashboard.html', context)
 
 
 # accounts/views.py

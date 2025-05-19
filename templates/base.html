@@ -330,6 +330,7 @@
     </style>
 </head>
 <body>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark mb-4">
         <div class="container">
@@ -395,7 +396,7 @@
         </div>
     </nav>
 
-    <!-- Hero Section (on homepage) -->
+{% if show_hero %}
     {% block hero %}
     <div class="container-fluid bg-primary text-white py-5 mb-5" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
         <div class="container py-4">
@@ -412,12 +413,12 @@
                         </a>
                     </div>
                 </div>
-
-                </div>
             </div>
         </div>
     </div>
     {% endblock %}
+{% endif %}
+
 
     <!-- Search Bar (for job listing page) -->
     {% block search %}
