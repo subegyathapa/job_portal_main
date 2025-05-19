@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserProfileForm
 from jobs.models import Application
-
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 
 def register(request):
     if request.method == 'POST':
@@ -60,3 +61,14 @@ from django.contrib.auth import logout
 def logout_view(request):
     logout(request)
     return redirect('login')  # or wherever you want to redirect after logout
+
+
+class CustomLoginView(LoginView):
+    template_name = 'accounts/login.html'
+
+    def get_success_url(self):
+        # Check if the user is an employer or job seeker
+        if self.request.user.profile.is_employer:
+            return reverse_lazy('dashboard')  # Employers go to dashboard
+        else:
+            return reverse_lazy('job_list')  # Job seekers go to job list

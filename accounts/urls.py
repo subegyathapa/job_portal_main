@@ -11,6 +11,11 @@ path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
     path('dashboard/', views.dashboard, name='dashboard'),
 
+
+
+
+path('login/', views.CustomLoginView.as_view(), name='login'),
+
     # Password reset URLs
     path('password-reset/',
          auth_views.PasswordResetView.as_view(template_name='accounts/password_reset.html'),
