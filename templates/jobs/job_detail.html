@@ -62,28 +62,29 @@
                     <h5>Application Deadline</h5>
                     <p>{{ job.deadline|date:"F d, Y" }}</p>
                 </div>
-            </div>
-            <div class="card-footer">
-                {% if user.is_authenticated %}
-                    {% if user.profile.is_employer %}
-                        {% if job.posted_by == user %}
-                            <div class="d-flex">
-                                <a href="{% url 'job_update' job.pk %}" class="btn btn-primary me-2">Edit Job</a>
-                                <a href="{% url 'job_delete' job.pk %}" class="btn btn-danger me-2">Delete Job</a>
-                                <a href="{% url 'manage_applications' job.pk %}" class="btn btn-info">Manage Applications</a>
-                            </div>
-                        {% endif %}
-                    {% else %}
-                        {% if already_applied %}
-                            <button class="btn btn-success" disabled>Already Applied</button>
-                        {% else %}
-                            <a href="{% url 'apply_for_job' job.pk %}" class="btn btn-primary">Apply Now</a>
-                        {% endif %}
-                    {% endif %}
-                {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-primary">Login to Apply</a>
-                {% endif %}
-            </div>
+            </div><!-- templates/jobs/job_detail.html -->
+<div class="card-footer">
+    {% if user.is_authenticated %}
+        {% if user.profile.is_employer %}
+            {% if job.posted_by == user %}
+                <div class="d-flex">
+                    <a href="{% url 'job_update' job.pk %}" class="btn btn-primary me-2">Edit Job</a>
+                    <a href="{% url 'job_delete' job.pk %}" class="btn btn-danger me-2">Delete Job</a>
+                    <a href="{% url 'manage_applications' job.pk %}" class="btn btn-info">Manage Applications</a>
+                </div>
+            {% endif %}
+        {% else %}
+            {% if already_applied %}
+                <button class="btn btn-success" disabled>Already Applied</button>
+            {% else %}
+                <a href="{% url 'apply_for_job' job.pk %}" class="btn btn-primary">Apply Now</a>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <!-- Updated login link with next parameter -->
+        <a href="{% url 'login' %}?next={% url 'apply_for_job' job.pk %}" class="btn btn-primary">Login to Apply</a>
+    {% endif %}
+</div>
         </div>
     </div>
 

@@ -131,12 +131,11 @@ def apply_for_job(request, pk):
 
             application.save()
             messages.success(request, 'Your application has been submitted successfully!')
-            return redirect('dashboard')
+            return redirect('job_detail', pk=job.pk)  # Redirect back to job detail
     else:
         form = ApplicationForm()
 
     return render(request, 'jobs/apply_form.html', {'form': form, 'job': job})
-
 
 @login_required
 def manage_applications(request, job_pk):
