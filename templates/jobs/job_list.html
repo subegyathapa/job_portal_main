@@ -89,11 +89,11 @@
                                 {% if job.salary_min or job.salary_max %}
                                     <p><strong>Salary:</strong>
                                         {% if job.salary_min and job.salary_max %}
-                                            ${{ job.salary_min }} - ${{ job.salary_max }}
+                                            NPR{{ job.salary_min }} - NPR{{ job.salary_max }}
                                         {% elif job.salary_min %}
-                                            From ${{ job.salary_min }}
+                                            From NPR{{ job.salary_min }}
                                         {% elif job.salary_max %}
-                                            Up to ${{ job.salary_max }}
+                                            Up to NPR{{ job.salary_max }}
                                         {% endif %}
                                     </p>
                                 {% endif %}

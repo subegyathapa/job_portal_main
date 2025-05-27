@@ -48,7 +48,7 @@
                         <h5>Salary</h5>
                         <p>
                             {% if job.salary_min and job.salary_max %}
-                                ${{ job.salary_min }} - ${{ job.salary_max }}
+                                NPR{{ job.salary_min }} - ${{ job.salary_max }}
                             {% elif job.salary_min %}
                                 From ${{ job.salary_min }}
                             {% elif job.salary_max %}
