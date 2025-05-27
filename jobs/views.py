@@ -189,3 +189,22 @@ def withdraw_application(request, job_pk):
         return redirect('job_detail', pk=job.pk)
 
     return render(request, 'jobs/cancel_application.html', {'application': application})
+
+
+# jobs/views.py
+@login_required
+def cancel_application(request, pk):
+    application = get_object_or_404(Application, pk=pk, applicant=request.user)
+
+    # Prevent cancellation if already hired or in final stages
+    if application.status in ['hired']:
+        messages.error(request, 'You cannot cancel an application that has been accepted.')
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+        job_title = application.job.title
+        application.delete()
+        messages.success(request, f'Your application for "{job_title}" has been cancelled.')
+        return redirect('dashboard')
+
+    return render(request, 'jobs/cancel_application.html', {'application': application})
