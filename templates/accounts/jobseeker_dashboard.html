@@ -44,6 +44,10 @@
                                 </td>
                                 <td>
                                     <a href="{% url 'job_detail' application.job.pk %}" class="btn btn-sm btn-outline-primary">View Job</a>
+                                    {% if application.status in 'pending,reviewed' %}
+                                            <a href="{% url 'cancel_application' application.pk %}" class="btn btn-sm btn-outline-danger">Cancel</a>
+                                        {% endif %}
+
                                 </td>
                             </tr>
                         {% endfor %}

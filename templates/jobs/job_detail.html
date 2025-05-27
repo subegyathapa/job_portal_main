@@ -75,7 +75,10 @@
             {% endif %}
         {% else %}
             {% if already_applied %}
-                <button class="btn btn-success" disabled>Already Applied</button>
+                <div class="d-flex">
+                    <button class="btn btn-success me-2" disabled>Already Applied</button>
+                    <a href="{% url 'withdraw_application' job.pk %}" class="btn btn-outline-danger">Withdraw Application</a>
+                </div
             {% else %}
                 <a href="{% url 'apply_for_job' job.pk %}" class="btn btn-primary">Apply Now</a>
             {% endif %}

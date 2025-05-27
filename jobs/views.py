@@ -160,3 +160,32 @@ def update_application_status(request, application_pk, status):
         messages.error(request, 'Invalid status.')
 
     return redirect('manage_applications', job_pk=application.job.pk)
+
+
+# jobs/views.py
+@login_required
+def cancel_application(request, pk):
+    # Get the application by ID, ensuring it belongs to the current user
+    application = get_object_or_404(Application, pk=pk, applicant=request.user)
+
+    if request.method == 'POST':
+        job_title = application.job.title
+        application.delete()
+        messages.success(request, f'Your application for "{job_title}" has been cancelled.')
+        return redirect('dashboard')
+
+    return render(request, 'jobs/cancel_application.html', {'application': application})
+
+
+@login_required
+def withdraw_application(request, job_pk):
+    # Alternative approach: cancel by job ID
+    job = get_object_or_404(Job, pk=job_pk)
+    application = get_object_or_404(Application, job=job, applicant=request.user)
+
+    if request.method == 'POST':
+        application.delete()
+        messages.success(request, f'Your application for "{job.title}" has been withdrawn.')
+        return redirect('job_detail', pk=job.pk)
+
+    return render(request, 'jobs/cancel_application.html', {'application': application})
