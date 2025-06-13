@@ -36,8 +36,14 @@ SECRET_KEY = 'django-insecure-q+!1bes(4c47-o^(wu7)7gb)9#!o72xcgm@qv&!&#73rj%0fob
 DEBUG = True
 
 ALLOWED_HOSTS = []
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'subegyacompany10@gmail.com'
+EMAIL_HOST_PASSWORD = 'companysubs1999@10'
+DEFAULT_FROM_EMAIL = 'Career Nexus <subegyacompany10@gmail.com>'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Application definition
 
 INSTALLED_APPS = [

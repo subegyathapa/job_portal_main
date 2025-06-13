@@ -7,11 +7,13 @@ from .models import UserProfile
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=30, required=True, label='First Name')
+    last_name = forms.CharField(max_length=30, required=True, label='Last Name')
     is_employer = forms.BooleanField(required=False, label='Register as an Employer')
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'is_employer']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'is_employer']
 
     def clean_email(self):
         email = self.cleaned_data.get('email')

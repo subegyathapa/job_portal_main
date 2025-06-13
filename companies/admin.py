@@ -7,3 +7,4 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ['name', 'owner', 'location', 'website']
     list_filter = ['location']
     search_fields = ['name', 'owner__username', 'location']
+    actions = None
